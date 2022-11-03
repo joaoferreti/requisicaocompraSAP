@@ -28,7 +28,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         connection = application.Children(0)
         session    = connection.Children(0)
     
-    # Leitura do Aruivo (xlsx) 
+    # Leitura do Arquivo (xlsx) 
     def registrar_compras(self):
 
         self.connect_sap()
@@ -36,7 +36,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         data = pd.read_excel(self.file)
         data = data.values.tolist()
         
-        # Processo do SAP - Scrpit
+        # Processo do SAP - Script
         self.session.findById("wnd[0]/tbar[0]/okcd").text = "ME51N"
         self.session.findById("wnd[0]").sendVKey(0)
         
