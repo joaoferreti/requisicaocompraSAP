@@ -10,34 +10,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
-        self.setWindowTitle("Requisição de compra")
-
-        # # #
-        # Botões de Comando
+        self.setWindowTitle("Requisição de compra")      
         self.btn_abrir.clicked.connect(self.open_file)
         self.btn_gerar.clicked.connect(self.registrar_compras)
-        # # #
-
+        
+    # Abrir o Arquivo
     def open_file(self):
         self.file = QFileDialog.getOpenFileName(self, "Selecione a Planilha")
         self.txt_path.setText(str(self.file[0]))
 
 
-
+    # Conexão com o SAP
     def connect_sap(self):
         
         SapGuiAuto = win32com.client.GetObject("SAPGUI")
         application = SapGuiAuto.GetScriptingEngine
         connection = application.Children(0)
         session    = connection.Children(0)
-
+    
+    # Leitura do Aruivo (xlsx) 
     def registrar_compras(self):
 
         self.connect_sap()
         self.file = self.txt_path.text
         data = pd.read_excel(self.file)
         data = data.values.tolist()
-
+        
+        # Processo do SAP - Scrpit
         self.session.findById("wnd[0]/tbar[0]/okcd").text = "ME51N"
         self.session.findById("wnd[0]").sendVKey(0)
         
@@ -59,7 +58,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             mygrid2.pressEnter()
 
             id+=1
-
+            
+        # Mensagem após o Processo
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setText("Registros efetuados com sucesso!")
